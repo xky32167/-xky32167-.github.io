@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            -o-user-select: none;
+            user-select: none;
+        }
+
+        .bigBox {
+            width: 50%;
+            background-color: #913eac;
+            margin: 40px auto;
+            box-sizing: border-box;
+            padding: 20px;
+            border-radius: 30px;
+            box-shadow: 0px 0px 30px 9px #939393;
+        }
+
+        .container{
+            margin: 0 auto;
+            text-align: center;
+            padding: 20px;
+        }
+
+        textarea{
+            width: 100%;
+            height: 200px;
+            margin: 20px 0;
+            font-size: 20px;
+            border: none;
+        }
+
+        .operate{
+            width: 20%;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        button{
+            font-size: 24px;
+            padding: 10px 20px;
+            background-color: #ffffff;
+            color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #timer{
+            font-size: 48px;
+            margin: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bigBox">
+        <div class="container">你是来办正事，还是找乐子？</div>
+        <p>通关次数: <span id="success-count">0</span></p>
+        <p>团灭次数: <span id="failure-count">0</span></p>
+        <textarea name="" placeholder="在4秒内输入相同文字，否则就会团灭" id="" style="resize: none;" cols="30" rows="10"></textarea>
+        <div class="operate">
+            <button>开始</button>
+            <div id="timer">4</div>
+        </div>
+    </div>
+
+    <script>
+        const container = document.querySelector(".container");
+        const input = document.querySelector("textarea");
+        const button = document.querySelector("button");
+        const timer = document.getElementById("timer");
+        input.value = "";
+        let successCount = 0;
+        let failureCount = 0;
+        let countdown;
+        let correctWords;
+        let scoreMessage;
+
+        function startGame() {
+            const letters = ["Q", "W", "E", "A", "S", "D"];
+            let randomLetters = "";
+
+            for (let i = 0; i < 7; i++) {
+                const randomIndex = Math.floor(Math.random() * letters.length);
+                randomLetters += letters[randomIndex];
+            }
+
+            button.disabled = true;
+            container.textContent = randomLetters;
+            const correctWords = randomLetters.toLowerCase();
+            countdown = setInterval(() => {
+                const remainingTime = parseInt(timer.textContent) - 1;
+                if (remainingTime === 0) {
+                    endGame();
+                    clearInterval(countdown);
+                }
+                timer.textContent = remainingTime;
+            },1000);
+            return correctWords;
+        }
+
+        function endGame() {
+            clearInterval(countdown);
+            const score = calculateScore();
+            if (score === 7) {
+                scoreMessage = `你的正确个数是${score}，恭喜通关！`;
+                successCount++;
+                updateSuccessCount();
+            }
+            else {
+                scoreMessage = `你的正确个数是${score}，已被魅魔团灭`;
+                failureCount++;
+                updateFailureCount();
+            }
+            container.textContent = scoreMessage;
+            button.disabled = false;
+            timer.textContent = "4";
+        }
+
+        function calculateScore() {
+            const userWords = input.value;
+            let score = 0;
+
+            for (let i = 0; i < userWords.length; i++) {
+                console.log(userWords[i], correctWords[i])
+                if (userWords[i] === correctWords[i]) {
+                    score++;
+                }
+            }
+            return score;
+        }
+
+        function updateSuccessCount() {
+            document.getElementById("success-count").textContent = successCount;
+        }
+
+        function updateFailureCount() {
+            document.getElementById("failure-count").textContent = failureCount;
+        }
+
+        button.addEventListener("click", () => {
+            timer.textContent = "4";
+            input.value = "";
+            container.textContent = "";
+            correctWords = startGame();
+        });
+
+    </script>
+</body>
+
+</html>
