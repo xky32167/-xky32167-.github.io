@@ -2,163 +2,122 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Rplus Open AI</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            -moz-user-select: none;
-            -webkit-user-select: none;
-            -ms-user-select: none;
-            -o-user-select: none;
-            user-select: none;
-        }
-
-        .bigBox {
-            width: 50%;
-            background-color: #913eac;
-            margin: 40px auto;
             box-sizing: border-box;
-            padding: 20px;
-            border-radius: 30px;
-            box-shadow: 0px 0px 30px 9px #939393;
         }
-
-        .container{
-            margin: 0 auto;
+        header {
+            background-color: #6B9DB2;
+            color: #fff;
+            padding: 15px;
             text-align: center;
-            padding: 20px;
         }
-
-        textarea{
-            width: 100%;
-            height: 200px;
-            margin: 20px 0;
-            font-size: 20px;
-            border: none;
-        }
-
-        .operate{
+        nav {
+            float: left;
             width: 20%;
-            margin: 0 auto;
-            text-align: center;
+            background-color: #fff;
+            padding: 15px;
+            height: 100vh;
+            position: fixed;
         }
-
-        button{
-            font-size: 24px;
-            padding: 10px 20px;
-            background-color: #ffffff;
-            color: #007bff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
+        section {
+            margin-left: 25%;
+            padding: 15px;
         }
-
-        #timer{
-            font-size: 48px;
-            margin: 20px;
+        iframe {
+            width: 100%;
+            height: 300px;
+        }
+        img {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+        h2 {
+            color: #04B4FF;
+        }
+        .discount-price {
+            text-decoration: line-through; /* 划掉文本线条 */
+            color: #04B4FF; /* 划掉文本颜色 */
+        }
+        .new-price {
+            margin-left: 32px; /* 调整空格的大小 */
+            color: red; /* 新价格颜色 */
         }
     </style>
 </head>
-
 <body>
-
-    <div class="bigBox">
-        <div class="container">你是来办正事，还是找乐子？</div>
-        <p>通关次数: <span id="success-count">0</span></p>
-        <p>团灭次数: <span id="failure-count">0</span></p>
-        <textarea name="" placeholder="在4秒内输入相同文字，否则就会团灭" id="" style="resize: none;" cols="30" rows="10"></textarea>
-        <div class="operate">
-            <button>开始</button>
-            <div id="timer">4</div>
+    <header>
+        <h1>术康开放AI</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="#product-intro">产品介绍</a></li>
+            <li><a href="#core-tech">核心技术</a></li>
+            <li><a href="#how-to-connect">如何接入</a></li>
+            <li><a href="#get-started">开始使用</a></li>
+        </ul>
+    </nav>
+    <section id="product-intro">
+        <h2>产品介绍</h2>
+        <div>
+            <p>仅需上传1张食物照片，您可以</p>
+            <p style="color: #04B4FF;">1. 识别食物</p>
+            <p>不论是包装食品还是您自己做的一桌饭菜，我们都能准确识别图中的食物信息</p>
+            <p style="color: #04B4FF;">2. 识别营养成分</p>
+            <p>我们能告诉你这些食物各自的营养成分，即热量、蛋白质、脂肪等营养素含量</p>
+            <p style="color: #04B4FF;">3. 获得餐食建议</p>
+            <p>我们拥有华西营养医学背景，能为您的餐食提供最专业的指导建议</p>
+            <p style="font-size: 12px; color: #04B4FF;">注：上传食物照片时，还可以附加文字，帮助系统更精准地判断</p>
+            <iframe src="https://www.youtube.com/watch?v=NqHtRugifBw" frameborder="0" allowfullscreen></iframe>
         </div>
-    </div>
-
-    <script>
-        const container = document.querySelector(".container");
-        const input = document.querySelector("textarea");
-        const button = document.querySelector("button");
-        const timer = document.getElementById("timer");
-        input.value = "";
-        let successCount = 0;
-        let failureCount = 0;
-        let countdown;
-        let correctWords;
-        let scoreMessage;
-
-        function startGame() {
-            const letters = ["Q", "W", "E", "A", "S", "D"];
-            let randomLetters = "";
-
-            for (let i = 0; i < 7; i++) {
-                const randomIndex = Math.floor(Math.random() * letters.length);
-                randomLetters += letters[randomIndex];
-            }
-
-            button.disabled = true;
-            container.textContent = randomLetters;
-            const correctWords = randomLetters.toLowerCase();
-            countdown = setInterval(() => {
-                const remainingTime = parseInt(timer.textContent) - 1;
-                if (remainingTime === 0) {
-                    endGame();
-                    clearInterval(countdown);
-                }
-                timer.textContent = remainingTime;
-            },1000);
-            return correctWords;
-        }
-
-        function endGame() {
-            clearInterval(countdown);
-            const score = calculateScore();
-            if (score === 7) {
-                scoreMessage = `你的正确个数是${score}，恭喜通关！`;
-                successCount++;
-                updateSuccessCount();
-            }
-            else {
-                scoreMessage = `你的正确个数是${score}，已被魅魔团灭`;
-                failureCount++;
-                updateFailureCount();
-            }
-            container.textContent = scoreMessage;
-            button.disabled = false;
-            timer.textContent = "4";
-        }
-
-        function calculateScore() {
-            const userWords = input.value;
-            let score = 0;
-
-            for (let i = 0; i < userWords.length; i++) {
-                console.log(userWords[i], correctWords[i])
-                if (userWords[i] === correctWords[i]) {
-                    score++;
-                }
-            }
-            return score;
-        }
-
-        function updateSuccessCount() {
-            document.getElementById("success-count").textContent = successCount;
-        }
-
-        function updateFailureCount() {
-            document.getElementById("failure-count").textContent = failureCount;
-        }
-
-        button.addEventListener("click", () => {
-            timer.textContent = "4";
-            input.value = "";
-            container.textContent = "";
-            correctWords = startGame();
-        });
-
-    </script>
+    </section>
+    <section id="core-tech">
+        <h2>核心技术</h2>
+        <div>
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRyAfn2cfndIlZueYR-SLhvOp1YlqXlY7XZw&usqp=CAU" alt="Image 1">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRyAfn2cfndIlZueYR-SLhvOp1YlqXlY7XZw&usqp=CAU" alt="Image 2">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRyAfn2cfndIlZueYR-SLhvOp1YlqXlY7XZw&usqp=CAU" alt="Image 3">
+            <p style="color: #04B4FF;">1. 深度学习</p>
+            <p>基于先进的神经网络，确保高效准确的图像分析</p>
+            <p style="color: #04B4FF;">2. 单目深度估计</p>
+            <p>通过深度信息，系统能更好地理解食物的结构和组成</p>
+            <p style="color: #04B4FF;">3. 大模型分割算法</p>
+            <p>精细分割图像，提高食物识别的准确性</p>
+            <p style="color: #04B4FF;">4. 营养成分模型</p>
+            <p>通过对大数据模型的训练，确保营养成分识别的准确性</p>
+            <p style="color: #04B4FF;">5. 营养知识库</p>
+            <p>甄选和录入专业营养知识库，为用户提供学术级餐食建议</p>
+        </div>
+    </section>
+    <section id="how-to-connect">
+        <h2>如何接入</h2>
+        <div>
+            <p>想要将强大的食物识别、营养成分识别和餐食建议功能接入您的网站或App？现在只要接入术康开放AI，通过API调用相应接口即可实现</p>
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRyAfn2cfndIlZueYR-SLhvOp1YlqXlY7XZw&usqp=CAU" alt="Image 4">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRyAfn2cfndIlZueYR-SLhvOp1YlqXlY7XZw&usqp=CAU" alt="Image 5">
+        </div>
+    </section>
+    <section id="get-started">
+        <h2>开始使用</h2>
+        <div>
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRyAfn2cfndIlZueYR-SLhvOp1YlqXlY7XZw&usqp=CAU" alt="Business Card">
+            <p>立即注册试用，现在还可享2000次免费调用api的机会！</p>
+            <p style="color: #04B4FF;">【注册流程】</p>
+            <p>在左侧填入您的姓名、电话和邮箱，客服会通过电话联系您开通账号</p>
+            <p style="color: #04B4FF;">【试用模式】</p>
+            <p>开通账号后，您将免费获得2000次餐食识别和建议服务，全面体验术康AI</p>
+            <p style="color: #04B4FF;">【订阅模式】</p>
+            <p>仅需<span class="discount-price">¥69</span>/月订阅服务，可以不限次数使用，并获得更高的带宽和AI分析效率</p>
+            <p class="new-price">¥29</p>
+            <p style="font-size: 20px; color: #04B4FF;">让我们一起开启智能饮食管理新时代！</p>
+        </div>
+    </section>
 </body>
-
 </html>
